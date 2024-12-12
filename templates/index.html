@@ -1,0 +1,336 @@
+{% extends "base.html" %}
+{% block content %}
+    <h2>Welcome to Deutsche Bank CFO Organizational Charts Portal</h2>
+    <p>Select a chart to view detailed organizational information for each department.</p>
+
+    <!-- Show Employees Section -->
+    <div id="show-employees-section">
+        <h3>Show Employees</h3>
+        <button id="showAllEmployeesButton">Show All Employees</button>
+
+        <!-- Search Bar -->
+        <div id="search-container">
+            <input type="text" id="searchBar" placeholder="Search employees by name..." />
+            <button id="searchButton">Search</button>
+        </div>
+
+        <!-- Filter Options -->
+        <!-- Filter Options -->
+        <div class="filter-options">
+            <label for="divisionFilter">Division:</label>
+            <select id="divisionFilter">
+                <option value="">All Divisions</option>
+            </select>
+
+            <label for="cityFilter">City:</label>
+            <select id="cityFilter">
+                <option value="">All Cities</option>
+            </select>
+
+            <!-- Add Work Type Filter -->
+            <label for="workTypeFilter">Work Type:</label>
+            <select id="workTypeFilter">
+                <option value="">All Work Types</option>
+            </select>
+
+        </div>
+
+
+        <!-- Results Section -->
+        <div id="employee-results">
+            <p>Click "Show All Employees" to view employees.</p>
+        </div>
+    </div>
+
+    <!-- View Organizational Chart Section -->
+    <div id="organizational-chart-section">
+        <h3>View Organizational Chart</h3>
+        <label for="organizationalChartDropdown">Select Leadership Team:</label> 
+        <select id="organizationalChartDropdown">
+            <option value="">Select a Leadership Team</option>
+            {% for ubr_level in ubr_levels %}
+                <option value="{{ ubr_level }}">{{ ubr_level }}</option>
+            {% endfor %}
+            <option value="CCAR">CCAR</option>  <!-- Add an option for CCAR -->
+        </select>
+        <button id="viewChartButton">View Chart</button>
+    </div>
+
+<!-- View Leadership Team Section -->
+<div id="view-leadership-team-section">
+    <div class="link-container">
+        <!-- Leadership Team Link styled as a button -->
+        <a href="/management" class="link-button">View Leadership Team</a>
+        <!-- Managers Link styled as a button -->
+        <a href="/managers" class="link-button">View Managers</a>
+    </div>
+</div>
+
+
+
+
+
+    <!-- View Organizational Chart Section -->
+    <div id="organizational-Management-section">
+        <h3 style="color: #004080;">CFO Leadership Teams</h3>
+    </div>
+
+
+    <!-- Existing Mini-Charts -->
+    <div id="ubr-levels-container">
+        {% for ubr_level in ubr_levels %}
+            <div class="ubr-level-card" data-ubr-level="{{ ubr_level }}">
+                <div class="ubr-level-header" style="background-color: {{ ubr_colors[loop.index0 % ubr_colors|length] }};">
+                    <h3 style="margin-bottom: 5px;">
+                        <a href="/chart/{{ ubr_level }}" style="color: white; text-decoration: none;">{{ ubr_level }}</a>
+                    </h3>
+                    <p style="font-size: 14px; font-family: 'Arial, sans-serif'; margin: 0;">
+                        Team Size: <strong id="team-size-{{ ubr_level }}"></strong>
+                    </p>
+                </div>
+                <div class="mini-chart" id="mini-chart-{{ loop.index }}"></div>
+            </div>
+        {% endfor %}
+    </div>
+    
+    
+
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="{{ url_for('static', filename='js/homepage_chart.js') }}"></script>
+    <script>
+        const ubrLevelData = {{ ubr_level_data | tojson }};
+        let isShowingEmployees = false; // Toggle state
+        let ccarEmployees = []; // Store CCAR employee data for filtering
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const showAllEmployeesButton = document.getElementById('showAllEmployeesButton');
+            const employeeResults = document.getElementById('employee-results');
+            
+
+            // Render mini charts
+            renderHomepageCharts(ubrLevelData);
+
+            // Loop through each ubrLevel and update the team size dynamically
+            Object.keys(ubrLevelData).forEach(ubrLevel => {
+                const totalCount = ubrLevelData[ubrLevel]?.total_count || 0; // Fetch total employee count or default to 0
+                const teamSizeElement = document.getElementById(`team-size-${ubrLevel}`);
+                if (teamSizeElement) {
+                    teamSizeElement.innerHTML = totalCount; // Dynamically set the Team Size
+                }
+            });
+
+            // Fetch CCAR data
+            fetch('/api/ccar_chart_data')
+                .then(response => response.json())
+                .then(data => {
+                    ccarEmployees = data; // Store CCAR data for filtering
+                    console.log('CCAR Data:', ccarEmployees); // Debugging log
+                })
+                .catch(error => console.error('Error fetching CCAR data:', error));
+
+     
+            // Fetch employee data for the "Show Employees" section
+            fetch('/employees')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    populateFilters(data.cities, data.all_employees);
+
+                    // Add toggle functionality to the "Show All Employees" button
+                    showAllEmployeesButton.addEventListener('click', () => {
+                        if (isShowingEmployees) {
+                            // Hide employees
+                            employeeResults.innerHTML = `<p>Click "Show All Employees" to view employees.</p>`;
+                            showAllEmployeesButton.textContent = 'Show All Employees';
+                            isShowingEmployees = false;
+                        } else {
+                            // Show employees
+                            displayResults(data.all_employees);
+                            showAllEmployeesButton.textContent = 'Hide Employees';
+                            isShowingEmployees = true;
+                        }
+                    });
+                })
+                .catch(error => console.error('Error fetching employee data:', error));
+
+            // Event listener for "View Chart" button
+            const viewChartButton = document.getElementById('viewChartButton');
+            viewChartButton.addEventListener('click', () => {
+                const selectedDivision = document.getElementById('organizationalChartDropdown').value;
+        
+                if (selectedDivision) {
+                    // If "CCAR" is selected, send "CCAR" data to chart.html
+                    if (selectedDivision === "CCAR") {
+                        window.location.href = "/chart/CCAR";  // This sends CCAR data
+                    } else {
+                        // Otherwise, send the selected UBR Level to chart.html
+                        window.location.href = `/chart/${selectedDivision}`;
+                    }
+                } else {
+                    alert('Please select a division to view its organizational chart.');
+                }
+            });
+        });
+
+        function capitalizeWords(str) {
+            return str
+                .split(' ')                 // Split the string by spaces (to handle multiple words)
+                .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())  // Capitalize first letter of each word
+                .join(' ');                 // Join the words back together
+        }
+        
+        function populateFilters(cities, employees) {
+            const cityFilter = document.getElementById('cityFilter');
+            const divisionFilter = document.getElementById('divisionFilter');
+            const workTypeFilter = document.getElementById('workTypeFilter');
+            
+            // Populate City Filter
+            cities.forEach(city => {
+                const option = document.createElement('option');
+                option.value = city;
+                option.textContent = city;
+                cityFilter.appendChild(option);
+            });
+        
+            // Populate Division Filter
+            const divisions = [...new Set(employees.map(emp => emp['UBR Level 8']))]; // Get unique divisions
+            divisions.forEach(division => {
+                const option = document.createElement('option');
+                option.value = division;
+                option.textContent = division;
+                divisionFilter.appendChild(option);
+            });
+        
+            // Add "CCAR" as a division option
+            const ccarOption = document.createElement('option');
+            ccarOption.value = 'CCAR';
+            ccarOption.textContent = 'CCAR';
+            divisionFilter.appendChild(ccarOption);
+            
+            // Get unique work types (case-insensitive)
+            const workTypes = [...new Set(employees.map(emp => emp['Worker Type']))];
+        
+            // Populate workTypeFilter with capitalized work types
+            workTypes.forEach(workType => {
+                const option = document.createElement('option');
+                option.value = workType;
+                option.textContent = capitalizeWords(workType); // Capitalize the work type properly
+                workTypeFilter.appendChild(option);
+            });
+        
+            // Add event listeners for filtering
+            cityFilter.addEventListener('change', () => filterResults(cityFilter.value, divisionFilter.value, workTypeFilter.value, employees, ccarEmployees));
+            divisionFilter.addEventListener('change', () => filterResults(cityFilter.value, divisionFilter.value, workTypeFilter.value, employees, ccarEmployees));
+            workTypeFilter.addEventListener('change', () => filterResults(cityFilter.value, divisionFilter.value, workTypeFilter.value, employees, ccarEmployees));
+        
+            // Add search functionality
+            document.getElementById('searchBar').addEventListener('input', (e) => {
+                const searchValue = e.target.value.toLowerCase();
+                const filtered = employees.filter(emp => emp['Preferred Name'].toLowerCase().includes(searchValue));
+                displayResults(filtered);
+            });
+        }
+        
+        
+        
+
+
+        function displayResults(employees) {
+            const resultsContainer = document.getElementById('employee-results');
+            
+            if (employees.length === 0) {
+                resultsContainer.innerHTML = '<p>No employees found for the selected filters.</p>';
+                return;
+            }
+        
+            // Calculate counts
+            const totalEmployees = employees.length;
+            const fullTimeEmployees = employees.filter(emp => emp['Worker Type']?.toLowerCase() === 'employee').length;
+            const contingentWorkers = employees.filter(emp => emp['Worker Type']?.toLowerCase() === 'contingent worker').length;
+        
+            // Render the summary section with clickable links on the text
+            const summarySection = `
+                <div class="employee-summary">
+                    <p><strong>Total Staff:</strong> ${totalEmployees}</p>
+                    <p><strong><a href="#" id="fullTimeFilter">Full-Time Employees</a>:</strong> ${fullTimeEmployees}</p>
+                    <p><strong><a href="#" id="contingentFilter">Contingent Workers</a>:</strong> ${contingentWorkers}</p>
+                </div>
+            `;
+        
+            // Render employee cards
+            const employeeCards = employees.map(emp => {
+                const workerTypeClass = emp['Worker Type']?.toLowerCase() === 'contingent worker' ? 'contingent' : 'employee';
+                const isContingentWorker = workerTypeClass === 'contingent';
+        
+                return `
+                    <div class="employee-card">
+                        <p><strong>Name:</strong> 
+                            ${isContingentWorker 
+                                ? emp['Preferred Name'] 
+                                : `<a href="/chart/${emp['UBR Level 8']}?highlight=${emp['Employee ID']}" 
+                                      title="View ${emp['Preferred Name']}'s position in the organizational chart">
+                                      ${emp['Preferred Name']}
+                                   </a>`}
+                        </p>
+                        <p><strong>Title:</strong> ${emp['Worker Corporate Title']}</p>
+                        <p><strong>Email:</strong> ${emp['Email - Work']}</p>
+                        <p><strong>City:</strong> ${emp['Location Address - City']}</p>
+                        <p><strong>Division:</strong> ${emp['UBR Level 8']}</p>
+                        <p><strong>Cost Center:</strong> ${emp['Cost Center Name']}</p>
+                        <p><strong>Organization Manager:</strong> ${emp['Organization Manager']}</p>
+                        <p><strong>Matrix Manager:</strong> ${emp['Matrix Manager']}</p>
+                        <p><strong>Worker Type:</strong> 
+                            <span class="worker-type-box ${workerTypeClass}">${emp['Worker Type']}</span>
+                        </p>
+                    </div>
+                `;
+            }).join('');
+        
+            // Combine the summary and employee cards
+            resultsContainer.innerHTML = summarySection + employeeCards;
+        
+            // Add event listeners to filter by work type when the links are clicked
+            document.getElementById('fullTimeFilter').addEventListener('click', (e) => {
+                e.preventDefault();
+                filterResults('', '', 'employee', employees, ccarEmployees); // Filter by full-time employees
+            });
+        
+            document.getElementById('contingentFilter').addEventListener('click', (e) => {
+                e.preventDefault();
+                filterResults('', '', 'contingent worker', employees, ccarEmployees); // Filter by contingent workers
+            });
+        }
+         
+        
+        
+        
+        function filterResults(city, division, workType, employees, ccarEmployees) {
+            const resultsContainer = document.getElementById('employee-results');
+        
+            // If "CCAR" is selected, filter specifically for CCAR
+            if (division === 'CCAR') {
+                const filtered = ccarEmployees.filter(emp =>
+                    (!city || emp['Location Address - City'] === city) &&
+                    (!workType || emp['Worker Type'] === workType)  // Filter based on Work Type
+                );
+                displayResults(filtered);
+            } else {
+                // General filtering for other divisions
+                const filtered = employees.filter(emp =>
+                    (!city || emp['Location Address - City'] === city) &&
+                    (!division || emp['UBR Level 8'] === division) &&
+                    (!workType || emp['Worker Type'] === workType)  // Filter based on Work Type
+                );
+                displayResults(filtered);
+            }
+        }
+        
+        
+
+
+    </script>
+{% endblock %}

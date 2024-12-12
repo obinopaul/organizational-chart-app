@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h2>Managers and their Subordinates</h2>
+    <p>This page displays employees within the selected UBR Level and their management structure.</p>
+
+    <!-- Filter Section -->
+    <div id="management-filters">
+        <label for="managementDivisionFilter">Select UBR Level:</label>
+        <select id="managementDivisionFilter">
+            <option value="">Select a UBR Level</option>
+            {% for ubr_level in division %}
+                <option value="{{ ubr_level }}" {% if ubr_level == request.args.get('division') %}selected{% endif %}>{{ ubr_level }}</option>
+            {% endfor %}
+            <option value="CCAR" {% if "CCAR" == request.args.get('division') %}selected{% endif %}>CCAR</option>  <!-- Add an option for CCAR -->
+        </select>
+
+        <!-- View Team Button -->
+        <button id="view-team-btn" class="view-team-button" disabled>View Team</button>
+    </div>
+
+    <!-- Display Selected UBR Level -->
+    <div id="selected-ubr">
+        {% if request.args.get('division') %}
+            <strong>Selected UBR Level:</strong> {{ request.args.get('division') }}
+        {% endif %}
+    </div>
+
+    <!-- Management Results Section -->
+    <div id="management-results">
+        <div class="employee-list" id="employee-list">
+            {% if request.args.get('division') %}
+                {% if manager_employee_dict %}
+                    {% for manager, employees in manager_employee_dict.items() %}
+                        <div class="employee-card">
+                            <h3>{{ manager }}</h3>
+                            <ul>
+                                {% for employee in employees %}
+                                    <li>{{ employee }}</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <p>No employees found for the selected UBR Level.</p>
+                {% endif %}
+            {% endif %}
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const viewTeamBtn = document.getElementById('view-team-btn');
+            const selectElement = document.getElementById('managementDivisionFilter');
+            const selectedUbrDiv = document.getElementById('selected-ubr');
+            const managementResultsDiv = document.getElementById('management-results');
+
+            // Handle UBR Level Selection
+            selectElement.addEventListener('change', function() {
+                const selectedUbrLevel = selectElement.value;
+                if (selectedUbrLevel) {
+                    viewTeamBtn.disabled = false;
+                } else {
+                    viewTeamBtn.disabled = true;
+                }
+            });
+
+            // When the "View Team" button is clicked
+            viewTeamBtn.addEventListener('click', function() {
+                const selectedUbrLevel = selectElement.value;
+
+                if (selectedUbrLevel) {
+                    // Update the "Selected UBR Level" text
+                    selectedUbrDiv.textContent = `Selected UBR Level: ${selectedUbrLevel}`;
+
+                    // Redirect to the server to fetch and display results
+                    window.location.href = "/managers?division=" + encodeURIComponent(selectedUbrLevel);
+                } else {
+                    alert('Please select a UBR Level.');
+                }
+            });
+        });
+    </script>
+{% endblock %}

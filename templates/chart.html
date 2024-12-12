@@ -1,0 +1,36 @@
+<!-- templates/chart.html -->
+{% extends "base.html" %}
+{% block content %}
+    <h2 class="chart-title">Organizational Chart for {{ ubr_level }}</h2>
+    <div id="chart-container">
+        <div id="chart"></div>
+    </div>
+
+    <div id="legend">
+        <h3> </h3>
+        <ul id="city-legend"></ul>
+    </div>
+
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="{{ url_for('static', filename='js/chart.js') }}"></script>
+    <script>
+        // Pass data from Flask to JavaScript
+        const chartData = JSON.parse('{{ chart_data | safe }}');
+        const titleHierarchy = {
+            "Managing Director": 1,
+            "Director": 2,
+            "Vice President": 3,
+            "Assistant Vice President": 4,
+            "Associate": 5,
+            "Analyst": 6
+        };
+        const ubrLevel = "{{ ubr_level }}";
+
+        // Pass the highlight ID from Flask to JavaScript
+        const highlightId = "{{ highlight_id | default('', true) }}";
+
+        document.addEventListener('DOMContentLoaded', function() {
+            renderChart(chartData, titleHierarchy, highlightId);
+        });
+    </script>
+{% endblock %}

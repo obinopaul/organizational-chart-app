@@ -1,0 +1,677 @@
+/* static/css/style.css */
+body {
+  font-family: 'Roboto', sans-serif;
+  background-color: #f5f7fa;
+  color: #333;
+}
+
+header {
+  background-color: #004080;
+  color: white;
+  padding: 10px 0;
+}
+
+.header-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo a {
+  color: white;
+  text-decoration: none;
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.nav ul {
+  list-style-type: none;
+  display: flex;
+  gap: 15px;
+}
+
+.nav a {
+  color: white;
+  text-decoration: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+}
+
+.nav a:hover {
+  background-color: #0056b3;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f9f9f9;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+  z-index: 1;
+}
+
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+
+.dropdown-content a {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+}
+
+.dropdown-content a:hover {
+  background-color: #f1f1f1;
+}
+
+.header-text {
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.header-text h1.logo a {
+  color: #004080; /* Blueish text */
+  text-decoration: none;
+  font-size: 24px; /* Adjust font size */
+  font-weight: bold;
+}
+
+h2 {
+  color: #004080;
+  font-size: 28px;
+}
+
+.container {
+  width: 80%;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+#chart-container {
+  margin-top: 30px;
+}
+
+footer {
+  background-color: #004080;
+  color: white;
+  text-align: center;
+  padding: 10px 0;
+  margin-top: 30px;
+}
+
+.footer-container p {
+  margin: 0;
+}
+
+/* static/css/style.css */
+body {
+  font-family: 'Roboto', sans-serif;
+  background-color: #f5f7fa;
+  color: #333;
+}
+
+header {
+  background-color: #f8f9fa; /* Whitish background */
+  color: #004080; /* Blueish text color to match the logo */
+  padding: 20px 0;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+}
+
+.header-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Header Logo Styling */
+.logo-container {
+  display: inline-block;
+  margin-right: 20px;
+  vertical-align: middle;
+}
+
+.company-logo {
+  height: 100px; /* Adjust height as needed */
+  width: auto; /* Maintain aspect ratio */
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.header-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+
+.nav ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  gap: 15px;
+}
+
+.nav ul li {
+  display: inline-block;
+}
+
+.nav ul li a {
+  text-decoration: none;
+  color: #0022a3; /* Matches the header text color */
+  font-weight: 500;
+  padding: 10px 20px;
+  border-radius: 5px;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.nav ul li a:hover {
+  color: #002850; /* Darker blue for hover effect */
+}
+
+.nav a {
+  color: white;
+  text-decoration: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+}
+
+.nav a:hover {
+  background-color: #0056b3;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f9f9f9;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+  z-index: 1;
+}
+
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+
+.dropdown-content a {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+}
+
+.dropdown-content a:hover {
+  background-color: #f1f1f1;
+}
+
+h2.chart-title {
+  text-align: center;
+  font-size: 32px;
+  color: #333;
+}
+
+#chart-container {
+  width: 90%;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.node circle {
+  fill: #fff;
+  stroke: #ccc;
+  stroke-width: 3px;
+}
+
+.node text {
+  font-family: 'Roboto', sans-serif;
+  font-weight: bold;
+  fill: #333;
+}
+
+.node .title {
+  font-size: 12px;
+  font-weight: normal;
+  fill: #555;
+}
+
+.tooltip {
+  position: absolute;
+  background: #fff;
+  border: 1px solid #ccc;
+  padding: 10px;
+  box-shadow: 2px 2px 12px rgba(0, 0, 0, 0.1);
+  pointer-events: none;
+  font-size: 14px;
+  color: #333;
+}
+
+#legend {
+  width: 90%;
+  margin: 30px auto;
+  text-align: center;
+}
+
+#legend h3 {
+  font-size: 24px;
+  color: #333;
+}
+
+#city-legend {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  padding: 0;
+  list-style-type: none;
+}
+
+#city-legend li {
+  display: flex;
+  align-items: center;
+}
+
+.legend-color {
+  width: 16px;
+  height: 16px;
+  display: inline-block;
+  margin-right: 8px;
+  border-radius: 50%;
+}
+
+
+
+#ubr-levels-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
+}
+
+.ubr-level-card {
+  width: 320px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  transition: transform 0.3s;
+}
+
+.ubr-level-card:hover {
+  transform: scale(1.05);
+}
+
+.ubr-level-header {
+  padding: 10px;
+  text-align: center;
+  color: white;
+  font-size: 1.2em;
+}
+
+.mini-chart {
+  padding: 20px;
+}
+
+.tooltip {
+  position: absolute;
+  background: linear-gradient(135deg, #FFD700, #FF8C00);
+  border-radius: 8px;
+  padding: 12px;
+  color: #333;
+  font-size: 14px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+  pointer-events: none;
+  opacity: 0.9;
+}
+
+
+/* Add styles for the search and filter section */
+#search-filter-section {
+  margin-bottom: 30px;
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+#show-employees-section {
+  margin-bottom: 30px;
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 10px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+#search-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+#searchBar {
+  flex: 1;
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 25px;
+}
+
+#searchButton {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+.filter-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+.filter-options input {
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.filter-options select {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+#employee-results {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.employee-card {
+  padding: 15px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background-color: #fff;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+  width: 250px;
+  font-size: 14px;
+}
+
+.worker-type-box {
+  display: inline-block;
+  padding: 5px 10px;
+  border-radius: 4px;
+  font-weight: bold;
+}
+
+.worker-type-box.employee {
+  background-color: #e0f7fa; /* Light cyan for regular employees */
+  color: #00796b; /* Dark cyan text */
+}
+
+.worker-type-box.contingent {
+  background-color: #fff3e0; /* Light orange for contingent workers */
+  color: #e65100; /* Dark orange text */
+  border: 1px solid #e65100; /* Optional border for more emphasis */
+}
+
+.employee-summary {
+  background-color: #f9f9f9;
+  padding: 15px;
+  margin-bottom: 15px;
+  border-radius: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  font-size: 16px;
+  color: #333;
+}
+.employee-summary p {
+  margin: 0 0 5px;
+}
+
+
+/* Add spacing before mini-charts section */ 
+#organizational-chart-section {
+  margin-bottom: 30px;  /*Add space after the organizational chart section */
+  }
+
+#ubr-levels-container {
+  margin-top: 40px; /* Add more space before the mini-charts section */
+}
+
+#organizational-Management-section {
+  margin-top: 40px; /* Space before the section */
+  text-align: center; /* Center-align the content */
+}
+
+#organizational-Management-section h3 {
+  font-size: 1.8em; /* Adjust the font size */
+  font-weight: bold; /* Make the text bold */
+  margin-bottom: 20px; /* Add spacing below the header */
+}
+
+
+
+#view-leadership-team-section {
+  margin-left: auto;  /* Aligns the "View Leadership Team" to the right */
+}
+
+#view-leadership-team-section a {
+  font-weight: bold;  /* Optional: Makes the link stand out */
+}
+
+
+/* Style the View Team Button */
+#view-team-btn {
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: not-allowed;
+  opacity: 0.6;
+  transition: background-color 0.3s, transform 0.2s;
+}
+
+#view-team-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.4;
+}
+
+#view-team-btn:hover {
+  background-color: #0056b3;
+  transform: scale(1.05);
+}
+
+/* Style the container to display links side by side */
+.link-container {
+  display: flex;
+  gap: 20px; /* Space between the buttons */
+  margin-top: 10px;
+}
+
+/* Style the individual links to look like buttons */
+.link-button {
+  text-decoration: none;
+  padding: 10px 20px;
+  background-color: #004080; /* Blue color */
+  color: white;
+  border-radius: 5px; /* Rounded corners */
+  font-size: 16px;
+  text-align: center;
+  transition: background-color 0.3s ease, transform 0.3s ease; /* Add transition effect */
+}
+
+/* Add hover effects for interactivity */
+.link-button:hover {
+  background-color: #0066cc; /* Lighter blue on hover */
+  transform: scale(1.05); /* Slightly enlarge on hover */
+}
+
+.link-button:active {
+  background-color: #003366; /* Even darker blue when clicked */
+}
+
+
+
+
+
+p {
+  font-size: 16px;
+  color: #7f8c8d;
+  margin-bottom: 30px;
+  text-align: center;
+}
+
+/* Filter Section Styling */
+#management-filters {
+  background-color: #ffffff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  margin-bottom: 30px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+#management-filters label {
+  font-size: 16px;
+  margin-bottom: 8px;
+  font-weight: 500;
+  color: #2c3e50;
+}
+
+#management-filters select {
+  font-size: 14px;
+  padding: 10px;
+  width: 100%;
+  max-width: 300px;
+  margin-bottom: 20px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  background-color: #fafafa;
+  transition: border 0.3s ease;
+}
+
+#management-filters select:focus {
+  border-color: #3498db;
+  outline: none;
+}
+
+#view-team-btn {
+  padding: 12px 20px;
+  background-color: #3498db;
+  color: white;
+  font-size: 16px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+  width: 100%;
+  max-width: 200px;
+}
+
+#view-team-btn:hover {
+  background-color: #2980b9;
+  transform: translateY(-2px);
+}
+
+#view-team-btn:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+  transform: translateY(0);
+}
+
+/* New Section for Selected UBR Level */
+#selected-ubr {
+  font-size: 18px;
+  color: #2980b9;
+  font-weight: 600;
+  text-align: center;
+  margin: 20px 0;
+}
+
+/* Manager and Employee Group Cards */
+#management-results {
+  max-width: 1200px;
+  margin: 30px auto;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  padding: 0 15px;
+}
+
+.employee-list {
+  background-color: #ffffff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.employee-list:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+}
+
+.employee-list h3 {
+  font-size: 18px;
+  color: #2980b9;
+  margin-bottom: 15px;
+  font-weight: 600;
+}
+
+.employee-list ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.employee-list ul li {
+  font-size: 16px;
+  color: #2c3e50;
+  margin: 8px 0;
+}
+
+.employee-list ul li::before {
+  content: '•';
+  color: #3498db;
+  margin-right: 10px;
+}
+
+/* No Employees Found Styling */
+.employee-list p {
+  font-size: 16px;
+  color: #e74c3c;
+  font-weight: 600;
+  text-align: center;
+}
+
+/* Responsive Design for Smaller Screens */
+@media (max-width: 1024px) {
+  #management-results {
+      grid-template-columns: repeat(2, 1fr); /* 2 columns for medium screens */
+  }
+}
+
+@media (max-width: 768px) {
+  #management-results {
+      grid-template-columns: 1fr; /* 1 column for small screens */
+  }
+
+  #management-filters {
+      padding: 15px;
+      width: 90%;
+  }
+
+  #view-team-btn {
+      width: 100%;
+  }
+
+  .employee-list {
+      padding: 15px;
+  }
+}

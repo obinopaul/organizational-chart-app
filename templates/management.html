@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h2>CFO Leadership Team</h2>
+    <p>This page displays employees within the selected UBR Level and their management structure.</p>
+
+    <!-- Filter Section -->
+    <div id="management-filters">
+        <label for="managementDivisionFilter">Select UBR Level:</label>
+        <select id="managementDivisionFilter">
+            <option value="">Select a UBR Level</option>
+            {% for ubr_level in ubr_list %}
+                <option value="{{ ubr_level }}">{{ ubr_level }}</option>
+            {% endfor %}
+        </select>
+
+        <!-- View Team Button -->
+        <button id="view-team-btn" class="view-team-button" disabled>View Team</button>
+    </div>
+
+    <!-- Management Results Section -->
+    <div id="management-results">
+        
+        <!-- Employee List will be updated here -->
+        <div class="employee-list" id="employee-list">
+            <!-- Dynamically updated employee names will appear here -->
+        </div>
+    </div>
+
+    <!-- Link to External JavaScript file -->
+    <script src="https://d3js.org/d3.v6.min.js"></script>
+    <script src="{{ url_for('static', filename='js/management.js') }}"></script>
+
+    <script>
+        // Pass data from Flask to JavaScript
+        const chartData = {{ ubr_list_data | tojson }};
+
+        // Function to filter chart data based on selected UBR Level
+        function filterDataByUBRLevel(ubrLevel) {
+            if (!ubrLevel) {
+                return [];  // Return empty array if no UBR Level selected
+            }
+            // Filter employees by selected UBR Level
+            return chartData[ubrLevel] ? chartData[ubrLevel].employees : [];
+        }
+
+        // Function to update the employee list displayed on the page
+        function updateEmployeeList(filteredData) {
+            const employeeListContainer = document.getElementById('employee-list');
+            employeeListContainer.innerHTML = '';  // Clear previous content
+
+            if (filteredData.length === 0) {
+                const noDataMessage = document.createElement('div');
+                noDataMessage.textContent = 'No data available for the selected UBR Level.';
+                employeeListContainer.appendChild(noDataMessage);
+            } else {
+                // Display the list of employees
+                filteredData.forEach(employee => {
+                    const employeeName = employee['Preferred Name'];  // Adjust this key if necessary
+                    if (employeeName) {
+                        const listItem = document.createElement('div');
+                        listItem.textContent = employeeName;
+                        employeeListContainer.appendChild(listItem);
+                    }
+                });
+            }
+        }
+
+        // Event listener for "View Team" button
+        document.addEventListener('DOMContentLoaded', function() {
+            const viewTeamBtn = document.getElementById('view-team-btn');
+            const selectElement = document.getElementById('managementDivisionFilter');
+
+            // Enable "View Team" button when a UBR Level is selected
+            selectElement.addEventListener('change', function() {
+                const selectedUbrLevel = selectElement.value;
+                if (selectedUbrLevel) {
+                    viewTeamBtn.disabled = false;
+                } else {
+                    viewTeamBtn.disabled = true;
+                }
+            });
+
+            // Event listener for "View Team" button click
+            viewTeamBtn.addEventListener('click', function() {
+                const selectedUbrLevel = selectElement.value;
+
+                if (selectedUbrLevel) {
+                    // Filter the data and update the employee list
+                    const filteredData = filterDataByUBRLevel(selectedUbrLevel);
+                    updateEmployeeList(filteredData);
+
+                    // Add the line to render the management chart after employee list is updated
+                    renderManagementChart(filteredData);
+                } else {
+                    alert('Please select a UBR Level.');
+                }
+            });
+        });
+    </script>
+
+{% endblock %}

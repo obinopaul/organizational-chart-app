@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ title }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <div class="container header-container">
+            <!-- Company Logo -->
+            <div class="logo-container">
+                <a href="{{ url_for('index') }}">
+                    <img src="{{ url_for('static', filename='img/logo.png') }}" alt="Company Logo" class="company-logo">
+                </a>
+            </div>
+
+            <div class="header-text">
+                <h1 class="logo">
+                    <a href="{{ url_for('index') }}">Chief Financial Office Organizational Charts</a>
+                </h1>
+            </div>
+
+            <nav class="nav">
+                <ul>
+                    <li><a href="{{ url_for('index') }}">Home</a></li>
+                    <li class="dropdown">
+                        <a href="#" class="dropbtn">Organizational Charts</a>
+                        <div class="dropdown-content">
+                            {% for ubr_level in ubr_levels %}
+                                <a href="{{ url_for('show_chart', ubr_level=ubr_level) }}">{{ ubr_level }}</a>
+                            {% endfor %}
+                        </div>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    <main>
+        <div class="container">
+            {% block content %}{% endblock %}
+        </div>
+    </main>
+    <footer>
+        <div class="container footer-container">
+            <p>&copy; {{ current_year }} Deutsche Bank. All Rights Reserved.</p>
+        </div>
+    </footer>
+</body>
+</html>
